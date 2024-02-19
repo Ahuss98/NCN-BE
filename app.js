@@ -1,13 +1,13 @@
 const express = require("express");
 const app = express();
-const {getTopics,checkReq} = require('./controllers/mainController')
+const {getTopics,checkReq,getApi} = require('./controllers/mainController')
+app.use(express.json());
 
-
-
+app.get('/api',getApi)
 app.get('/api/:dataSet',checkReq)
 app.get('/api/topics',getTopics)
 
-app.use((err, req, res, next) => {
+app.use ('*',(err, req, res, next) => {
     if(err.status && err.msg){
         res.status(404).send({msg: err.msg});
     }  else {
@@ -16,3 +16,4 @@ app.use((err, req, res, next) => {
 })
 
 module.exports = app
+

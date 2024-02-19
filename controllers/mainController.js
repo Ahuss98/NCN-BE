@@ -1,4 +1,6 @@
 const {readTopics} = require('../models/mainModel')
+const endpoints = require('../endpoints.json')
+
 
 exports.checkReq = function(req,res,next) {
     const dataSet = req.params.dataSet 
@@ -15,3 +17,7 @@ exports.getTopics = function(req,res,next){
     })
     .catch(next)
     }
+
+exports.getApi = function(req,res,next){
+    res.status(200).send(endpoints)
+}
