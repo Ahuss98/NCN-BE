@@ -1,5 +1,5 @@
-const {readTopics,readArticleId,readArticle} = require('../models/mainModel')
-
+const {readTopics,readArticleId,readArticle,readComments} = require('../models/mainModel')
+const {formatComments} = require('../db/seeds/utils')
 
 exports.checkReq = function(req,res,next) {
     const dataSet = req.params.dataSet 
@@ -38,6 +38,19 @@ exports.getArticleId = function(req,res,next){
 
 exports.getArticles = function(req,res,next){
     readArticle().then((body) => {
+        res.status(200).send({articles: body})
+    })
+}
+exports.getCommentsForArticleId = function(req,res,next){
+    const id = req.params.article_id
+    readComments(id).then((body) => {
+        if(body.length === 0){
+            res.status(404).send({msg:'not found'})
+        }
         res.status(200).send(body)
+    })
+    .catch((err) => {
+        next(err)
+
     })
 }
