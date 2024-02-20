@@ -122,3 +122,42 @@ describe('GET api/article/:articleid', () => {
         })
     });
 });
+
+//task 5
+describe('GET /api/articles', () => {
+    test('GET: 200 should respond with an array of all article objects with expected properties', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((response) => {
+            const body = response.body
+            body.forEach((article) => {
+                expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(Number),
+                })
+            })
+        })
+    });
+    test('GET: 200 should should be sorted by date in descending order', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((response) => {
+            const body = response.body
+            body.forEach((article,index) => {
+                if(index !== body.length -1){
+                    const currentDate = new Date(article.created_at)
+                    const nextDay = new Date(body[index + 1].created_at)
+                    expect(currentDate.getTime()).toBeGreaterThanOrEqual(nextDay.getTime())
+                }
+            })
+        })
+    });
+});
