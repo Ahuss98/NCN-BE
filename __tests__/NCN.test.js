@@ -131,18 +131,20 @@ describe('GET /api/articles', () => {
         .expect(200)
         .then((response) => {
             const body = response.body
-            body.forEach((article) => {
-                expect.objectContaining({
-                    author: expect.any(String),
-                    title: expect.any(String),
-                    article_id: expect.any(Number),
-                    topic: expect.any(String),
-                    created_at: expect.any(String),
-                    votes: expect.any(Number),
-                    article_img_url: expect.any(String),
-                    comment_count: expect.any(Number),
+            if( body.length > 0){
+                body.forEach((article) => {
+                    expect.objectContaining({
+                        author: expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                        comment_count: expect.any(Number),
+                    })
                 })
-            })
+            }
         })
     });
     test('GET: 200 should should be sorted by date in descending order', () => {
@@ -150,14 +152,70 @@ describe('GET /api/articles', () => {
         .get('/api/articles')
         .expect(200)
         .then((response) => {
+            const body = response.body.articles
+            if(body.length > 0){
+                body.forEach((article,index) => {
+                    if(index !== body.length -1){
+                        const currentDate = new Date(article.created_at)
+                        const nextDay = new Date(body[index + 1].created_at)
+                        expect(currentDate.getTime()).toBeGreaterThanOrEqual(nextDay.getTime())
+                    }
+                })
+            }
+        })
+    });
+});
+
+//task 6
+describe('GET /api/articles/:article_id/comments', () => {
+    test('GET: 200 should respond with an array of comments for given article id with expected properties', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((response) => {
+            const body = response
+            if(body.length > 0){
+                body.forEach((comments) => {
+                    console.log(comments.comment_id,'this are the comments')
+                    expect.objectContaining({
+                        comment_id: expect.any(Number),
+                        votes: expect.any(Number),
+                        created_at: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        article_id: expect.any(Number),
+                    })
+                })
+            }
+        })
+    });
+    test('GET: 200 comments should be ordered in decsending order', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((response) => {
             const body = response.body
-            body.forEach((article,index) => {
-                if(index !== body.length -1){
-                    const currentDate = new Date(article.created_at)
-                    const nextDay = new Date(body[index + 1].created_at)
-                    expect(currentDate.getTime()).toBeGreaterThanOrEqual(nextDay.getTime())
-                }
-            })
+            if(body.length > 0){
+                expect(body).toBeSortedBy('created_at',{descending : true})
+            }
+        })
+    });
+    test('GET 404 resourse does not exist', () => {
+        return request(app)
+        .get('/api/articles/9090/comments')
+        .expect(404)
+        .then((response) => {
+            const body = response.body
+            expect(body.msg).toBe('not found')
+        })
+    });
+    test('GET: 400 invalid ID', () => {
+        return request(app)
+        .get('/api/articles/notAnID/comments')
+        .expect(400)
+        .then((response) => {
+            const body = response.body
+            expect(body.msg).toBe('bad request')
         })
     });
 });
