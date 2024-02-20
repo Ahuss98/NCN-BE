@@ -1,4 +1,4 @@
-const {readTopics,readArticle} = require('../models/mainModel')
+const {readTopics,readArticleId,readArticle} = require('../models/mainModel')
 
 
 exports.checkReq = function(req,res,next) {
@@ -22,18 +22,22 @@ exports.getApi = function(req,res,next){
     res.status(200).send(endpoints)
 }
 
-exports.getArticle = function(req,res,next){
+exports.getArticleId = function(req,res,next){
     const id = req.params.articles_id
-    readArticle(id).then((body) => {
-        console.log(body)
+    readArticleId(id).then((body) => {
         if(!body){
             res.status(404).send({msg:'not found'})
         }
         res.status(200).send(body)
     })
     .catch((err) => {
-        console.log(err)
         next(err)
 
+    })
+}
+
+exports.getArticles = function(req,res,next){
+    readArticle().then((body) => {
+        res.status(200).send(body)
     })
 }
