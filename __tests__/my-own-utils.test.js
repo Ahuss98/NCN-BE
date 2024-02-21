@@ -8,7 +8,6 @@ describe('testing converter util', () => {
         const expectedOutput = [ [ [ 'name', 'ahmed' ], [ 'age', '25' ], [ 'goodAt', 'jiu-jitsu' ] ] ]
         //act
         //assert
-        console.log(actualOutput)
         expect(actualOutput).toEqual(expectedOutput)
     });
 });
