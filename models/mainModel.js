@@ -56,3 +56,12 @@ exports.updateArticle = function(inc_votes,id){
     throw(err)
 })
 }
+
+exports.removeComment = function(id){
+    return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`,[id]).then((data) => {
+        return data
+    })
+    .catch((err) => {
+        throw(err)
+    })
+}
