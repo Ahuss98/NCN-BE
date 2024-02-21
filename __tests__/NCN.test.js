@@ -16,7 +16,7 @@ afterAll(() => db.end());
 
 
 //task1
-describe('testing index.js', () => {
+describe('1-testing index.js', () => {
     describe('requred keys from index should have objects with correct data', () => {
         test('artical data ', () => {
             articleData.forEach((currObject,index) => {expect(typeof currObject).toBe('object')
@@ -37,8 +37,9 @@ describe('testing index.js', () => {
     });
 })
 
+describe('GET', () => {
 //task2
-describe('GET /api/topics',() => {
+describe('2-GET /api/topics',() => {
     test('GET:200 availble on endpoint /api/topics', () => {
         return request(app)
         .get('/api/topics')
@@ -64,7 +65,7 @@ describe('GET /api/topics',() => {
 })
 
 //task3
-describe('GET /API', () => {
+describe('3-GET /API', () => {
     test('GET: 200 should return a object of all endpoints', () => {
         return request(app)
         .get('/api')
@@ -78,7 +79,7 @@ describe('GET /API', () => {
 })
 
 //task4
-describe('GET api/article/:articleid', () => {
+describe('4-GET api/article/:articleid', () => {
     test('GET: 200 should resturn an object', () => {
         return request(app)
         .get('/api/articles/1')
@@ -124,14 +125,14 @@ describe('GET api/article/:articleid', () => {
 });
 
 //task 5
-describe('GET /api/articles', () => {
+describe('5-GET /api/articles', () => {
     test('GET: 200 should respond with an array of all article objects with expected properties', () => {
         return request(app)
         .get('/api/articles')
         .expect(200)
         .then((response) => {
-            const body = response.body
-            if( body.length > 0){
+            const body = response.body.articles
+            if( body.length !== 0){
                 body.forEach((article) => {
                     expect.objectContaining({
                         author: expect.any(String),
@@ -153,7 +154,7 @@ describe('GET /api/articles', () => {
         .expect(200)
         .then((response) => {
             const body = response.body.articles
-            if(body.length > 0){
+            if(body.length !== 0){
                 body.forEach((article,index) => {
                     if(index !== body.length -1){
                         const currentDate = new Date(article.created_at)
@@ -167,16 +168,15 @@ describe('GET /api/articles', () => {
 });
 
 //task 6
-describe('GET /api/articles/:article_id/comments', () => {
+describe('6-GET /api/articles/:article_id/comments', () => {
     test('GET: 200 should respond with an array of comments for given article id with expected properties', () => {
         return request(app)
         .get('/api/articles/1/comments')
         .expect(200)
         .then((response) => {
-            const body = response
-            if(body.length > 0){
+            const body = response.body
+            if(body.length !== 0){
                 body.forEach((comments) => {
-                    console.log(comments.comment_id,'this are the comments')
                     expect.objectContaining({
                         comment_id: expect.any(Number),
                         votes: expect.any(Number),
@@ -195,7 +195,7 @@ describe('GET /api/articles/:article_id/comments', () => {
         .expect(200)
         .then((response) => {
             const body = response.body
-            if(body.length > 0){
+            if(body.length !== 0){
                 expect(body).toBeSortedBy('created_at',{descending : true})
             }
         })
@@ -217,5 +217,60 @@ describe('GET /api/articles/:article_id/comments', () => {
             const body = response.body
             expect(body.msg).toBe('bad request')
         })
+    });
+});
+})
+describe('POST', () => {
+    describe('7-POST /api/articles/:article_id/comments', () => {
+        test('POST: 201 should add a comment for an article, and respond with comment with expected properties', () => {
+            const postObj = {username:'butter_bridge', body:'i like the story backwords'}
+            return request(app)
+            .post('/api/articles/1/comments')
+            .send(postObj)
+            .expect(201)
+            .then((response) => {
+                expect.objectContaining({
+                    comment_id: expect.any(Number),
+                    body: expect.any(String),
+                    article_id: 1,
+                    author: expect.any(String),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                })
+            })
+        });
+        test('POST: 400 missing required fields', () => {
+            const postObj = { body:'i like the story backwords'}
+            return request(app)
+            .post('/api/articles/1/comments')
+            .send(postObj)
+            .expect(400)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('bad request')
+            })
+        });
+        test('POST: 400 failing schema validation (for username that doesnt exist)',() => {
+            const postObj = {username:'321demha',body:'i like the story backwords'}
+            return request(app)
+            .post('/api/articles/1/comments')
+            .send(postObj)
+            .expect(400)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('bad request')
+            })
+        })
+        test('Post: 404 resourse does not exist', () => {
+            const postObj = {username:'butter_bridge', body:'i like the story backwords'}
+            return request(app)
+            .get('/api/articles/9090/comments')
+            .send(postObj)
+            .expect(404)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('not found')
+            })
+        });
     });
 });

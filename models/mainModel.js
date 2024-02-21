@@ -1,4 +1,6 @@
 const db = require('../db/connection')
+const format = require("pg-format");
+const {convertToNestedArray} = require('../my-own-utils')
 
 exports.readTopics = function(){
     return db.query(`SELECT * FROM topics`).then((data) => {
@@ -27,3 +29,17 @@ exports.readComments = function(id) {
         return rows;
     });
 };
+
+exports.writeComment = function(comment){
+// console.log(comment,'the comment')
+// console.log(comment.body)
+    return db.query(`INSERT INTO comments
+        (body, author, article_id)
+        VALUES ($1, $2, $3)
+        RETURNING *;`,[comment.body,comment.author,comment.article_id]).then(({rows}) => {
+        return rows[0]
+                    })
+                    .catch((err) => {
+                        throw err
+                    })
+}
