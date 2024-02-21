@@ -264,13 +264,34 @@ describe('POST', () => {
         test('Post: 404 resourse does not exist', () => {
             const postObj = {username:'butter_bridge', body:'i like the story backwords'}
             return request(app)
-            .get('/api/articles/9090/comments')
+            .post('/api/articles/9090/comments')
             .send(postObj)
             .expect(404)
             .then((response) => {
                 const body = response.body
                 expect(body.msg).toBe('not found')
             })
+        });
+        test('Post: 400 invalid ID', () => {
+            const postObj = {username:'butter_bridge', body:'i like the story backwords'}
+            return request(app)
+            .post('/api/articles/not-an-id/comments')
+            .send(postObj)
+            .expect(400)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('not found')
+            })
+        });
+    });
+});
+
+xdescribe('PATCH', () => {
+    describe('PATCH /api/articles/:article_id', () => {
+        test('PATCH: 200 update an article by ID and responds with updated article', () => {
+            const postObj = {inc_votes: 20}
+            return request(app)
+
         });
     });
 });

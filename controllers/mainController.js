@@ -61,14 +61,23 @@ exports.postCommentForArticleId = function (req,res,next){
     if (!username || !body) {
         return res.status(400).send({ msg: "bad request" });
     }
+    if (isNaN(id)) {
+        return res.status(400).send({ msg: "not found" });
+    }
     const comment = {
         body,
         author: username,
         article_id: id,
     };
-    writeComment(comment).then((result) => {
-        res.status(201).send(result)
+    readComments(id).then((body) => {
+        if(body.length === 0){
+            res.status(404).send({msg:'not found'})
+        }
+        return writeComment(comment)
     })
+    .then((result) => {
+            res.status(201).send(result)
+        })
     .catch((err) => {
         next(err)
     })
