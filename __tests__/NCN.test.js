@@ -239,6 +239,23 @@ describe('POST', () => {
                 })
             })
         });
+        test('POST: 201 adds comment and ignores unnecassary properties', () => {
+            const postObj = {username:'butter_bridge', body:'i like the story backwords',taks:'go shopping'}
+            return request(app)
+            .post('/api/articles/1/comments')
+            .send(postObj)
+            .expect(201)
+            .then((response) => {
+                expect.objectContaining({
+                    comment_id: expect.any(Number),
+                    body: expect.any(String),
+                    article_id: 1,
+                    author: expect.any(String),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                })
+            })
+        });
         test('POST: 400 missing required fields', () => {
             const postObj = { body:'i like the story backwords'}
             return request(app)
