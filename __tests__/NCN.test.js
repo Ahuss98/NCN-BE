@@ -221,6 +221,7 @@ describe('6-GET /api/articles/:article_id/comments', () => {
 });
 })
 describe('POST', () => {
+    //task7
     describe('7-POST /api/articles/:article_id/comments', () => {
         test('POST: 201 should add a comment for an article, and respond with comment with expected properties', () => {
             const postObj = {username:'butter_bridge', body:'i like the story backwords'}
@@ -246,14 +247,14 @@ describe('POST', () => {
             .send(postObj)
             .expect(201)
             .then((response) => {
-                expect.objectContaining({
+                expect(response.body).toMatchObject({
                     comment_id: expect.any(Number),
                     body: expect.any(String),
                     article_id: 1,
                     author: expect.any(String),
                     votes: expect.any(Number),
                     created_at: expect.any(String),
-                })
+                });
             })
         });
         test('POST: 400 missing required fields', () => {
@@ -304,7 +305,8 @@ describe('POST', () => {
 });
 
 describe('PATCH', () => {
-    describe('PATCH /api/articles/:article_id', () => {
+    //task8
+    describe('8-PATCH /api/articles/:article_id', () => {
         test('PATCH: 200 update an article by ID and responds with updated article', () => {
             const postObj = {inc_votes: 20}
             return request(app)
@@ -312,18 +314,19 @@ describe('PATCH', () => {
             .send(postObj)
             .expect(200)
             .then((response) => {
-                const updatedArticle = response.body
-
-                expect.objectContaining({
-                    title: expect.any(String),
-                    topic: expect.any(String),
-                    author: expect.any(String),
-                    body: expect.any(String),
-                    created_at: expect.any(String),
-                    votes: 120,
-                    article_img_url: expect.any(String),
-                    article_id: 1,
-                })
+                const updatedArticle = response.body[0]
+                expect(updatedArticle).toEqual(
+                    expect.objectContaining({
+                        title: expect.any(String),
+                        topic: expect.any(String),
+                        author: expect.any(String),
+                        body: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: 120,
+                        article_img_url: expect.any(String),
+                        article_id: 1,
+                    })
+                )
             })
         });
     test('PATCH: 404 resourse does not exist', () => {
@@ -348,7 +351,7 @@ describe('PATCH', () => {
             expect(body.msg).toBe('bad request')
         })
     })
-    test('PATCH: 400 missing required fields', () => {
+    test('PATCH: 400 missing required fields (dosnt include correct key of inc_value)', () => {
         const postObj = { body:'i like the story backwords'}
         return request(app)
         .patch('/api/articles/1')
@@ -359,7 +362,7 @@ describe('PATCH', () => {
             expect(body.msg).toBe('bad request')
         })
     });
-    test.only('PATCH: 400 incorrect type (string instead of number)',() => {
+    test('PATCH: 400 incorrect type (string instead of number) when correct key in object',() => {
         const postObj = {inc_votes: 'hellooo'}
         return request(app)
         .patch('/api/articles/1')
@@ -372,3 +375,29 @@ describe('PATCH', () => {
     })
 })
 })
+describe('DELETE', () => {
+    //task9
+    describe('DELETE /api/comments/:comment_id', () => {
+        test('DELETE: 204 succesfully deletes comment by id', () => {
+            return request(app)
+            .delete('/api/comments/1')
+            .expect(204)
+        });
+        test('DELETE: 404 comment not found', () => {
+            return request(app)
+                .delete('/api/comments/9999')
+                .expect(404)
+                .then((response) => {
+                    expect(response.body.msg).toBe('not found');
+                });
+        });
+        test('DELETE: 400 not a valid id type', () => {
+            return request(app)
+                .delete('/api/comments/notAnId')
+                .expect(400)
+                .then((response) => {
+                    expect(response.body.msg).toBe('bad request');
+                });
+        });
+    });
+});

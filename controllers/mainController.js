@@ -1,4 +1,4 @@
-const {readTopics,readArticleId,readArticle,readComments,writeComment,updateArticle} = require('../models/mainModel')
+const {readTopics,readArticleId,readArticle,readComments,writeComment,updateArticle,removeComment} = require('../models/mainModel')
 
 
 exports.checkReq = function(req,res,next) {
@@ -91,7 +91,6 @@ exports.patchArticleById = function(req,res,next) {
     }
     updateArticle(inc_votes,id)
         .then((updatedData) => {
-            console.log(updatedData)
             if(updatedData.length === 0){
                 return res.status(404).send({ msg: "not found" })
             }
@@ -100,4 +99,17 @@ exports.patchArticleById = function(req,res,next) {
         .catch((err) => {
             next(err)
         })
+}
+
+exports.deleteCommentById = function(req,res,next) {
+    const id = req.params.comment_id
+    removeComment(id).then((result) => {
+        if (result.rows.length === 0) {
+            return res.status(404).send({ msg: 'not found' });
+        }
+        res.sendStatus(204)
+    })
+    .catch((err) => {
+        next(err)
+    })
 }
