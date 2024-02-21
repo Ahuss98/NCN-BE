@@ -43,3 +43,16 @@ exports.writeComment = function(comment){
                         throw err
                     })
 }
+
+exports.updateArticle = function(inc_votes,id){
+    const sqlString = `UPDATE articles
+                        SET
+                        votes = votes + $1
+                        WHERE article_id = $2
+                        RETURNING *;`
+    return db.query(sqlString,[inc_votes,id]).then(({rows}) =>{
+    return rows
+}).catch((err) => {
+    throw(err)
+})
+}

@@ -303,12 +303,72 @@ describe('POST', () => {
     });
 });
 
-xdescribe('PATCH', () => {
+describe('PATCH', () => {
     describe('PATCH /api/articles/:article_id', () => {
         test('PATCH: 200 update an article by ID and responds with updated article', () => {
             const postObj = {inc_votes: 20}
             return request(app)
+            .patch('/api/articles/1')
+            .send(postObj)
+            .expect(200)
+            .then((response) => {
+                const updatedArticle = response.body
 
+                expect.objectContaining({
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: 120,
+                    article_img_url: expect.any(String),
+                    article_id: 1,
+                })
+            })
         });
+    test('PATCH: 404 resourse does not exist', () => {
+        const postObj = {inc_votes: 20}
+        return request(app)
+        .patch('/api/articles/9090')
+        .send(postObj)
+        .expect(404)
+        .then((response) => {
+            const body = response.body
+            expect(body.msg).toBe('not found')
+        })
     });
-});
+    test('PATCH: 400 invalid ID', () => {
+        const postObj = {inc_votes: 20}
+        return request(app)
+        .patch('/api/articles/not-an-id')
+        .send(postObj)
+        .expect(400)
+        .then((response) => {
+            const body = response.body
+            expect(body.msg).toBe('bad request')
+        })
+    })
+    test('PATCH: 400 missing required fields', () => {
+        const postObj = { body:'i like the story backwords'}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(postObj)
+        .expect(400)
+        .then((response) => {
+            const body = response.body
+            expect(body.msg).toBe('bad request')
+        })
+    });
+    test.only('PATCH: 400 incorrect type (string instead of number)',() => {
+        const postObj = {inc_votes: 'hellooo'}
+        return request(app)
+        .patch('/api/articles/1')
+        .send(postObj)
+        .expect(400)
+        .then((response) => {
+            const body = response.body
+            expect(body.msg).toBe('bad request')
+        })
+    })
+})
+})
