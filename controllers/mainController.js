@@ -1,5 +1,5 @@
-const {readTopics,readArticleId,readArticle,readComments} = require('../models/mainModel')
-const {formatComments} = require('../db/seeds/utils')
+const {readTopics,readArticleId,readArticle,readComments,writeComment} = require('../models/mainModel')
+
 
 exports.checkReq = function(req,res,next) {
     const dataSet = req.params.dataSet 
@@ -52,5 +52,24 @@ exports.getCommentsForArticleId = function(req,res,next){
     .catch((err) => {
         next(err)
 
+    })
+}
+
+exports.postCommentForArticleId = function (req,res,next){
+    const id = req.params.article_id
+    const { username, body } = req.body
+    if (!username || !body) {
+        return res.status(400).send({ msg: "bad request" });
+    }
+    const comment = {
+        body,
+        author: username,
+        article_id: id,
+    };
+    writeComment(comment).then((result) => {
+        res.status(201).send(result)
+    })
+    .catch((err) => {
+        next(err)
     })
 }

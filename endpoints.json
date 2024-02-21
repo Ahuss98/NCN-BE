@@ -39,5 +39,33 @@
       }
     ]
     }
+},
+"GET /api/articles/:article_id/comments": {
+  "description": "serves an array of all comments for a single article id with newest frist",
+  "queries": ["article_id"],
+  "exampleResponse": {
+    "comments": [{
+      "body": " I carry a log — yes. Is it funny to you? It is not to me.",
+      "votes": -100,
+      "author": "icellusedkars",
+      "article_id": 1,
+      "created_at": 1582459260000
+    }]
+  }
+},
+"POST /api/articles/:article_id/comments": {
+  "description": "posts an object of a comments for a single article id",
+  "queries": ["article_id"],
+  "exampleBody":{"username":"butter_bridge', body:'i like the story backwords"},
+  "exampleResponse": {
+    "comments": [{
+      "body": "i like the story backwords",
+      "votes": 0,
+      "author": "butter_bridge",
+      "article_id": 1,
+      "created_at": 1582459260000,
+      "comment_id": 45
+    }]
+  }
 }
 }
