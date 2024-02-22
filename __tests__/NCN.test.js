@@ -85,7 +85,8 @@ describe('4-GET api/article/:articleid', () => {
         .get('/api/articles/1')
         .expect(200)
         .then((response) => {
-            expect(typeof response).toBe('object')
+            body = response.body
+            expect(typeof body).toBe('object')
         })
     });
     test('GET:200 should expected properties ', () => {
@@ -453,7 +454,7 @@ describe('GET', () => {
                     })
             })
         }); 
-        test('GET 404 when an invalid query is requested', () => {
+        test('GET 404 when an invalid query is requested/has no associated articles', () => {
             return request(app)
             .get('/api/articles?topic=23-not-a-query')
             .expect(404)
@@ -463,4 +464,26 @@ describe('GET', () => {
             })
         });
     });
-});
+    //task12
+    describe('12-GET /api/articles/:article_id (comment_count)', () => {
+        test('GET: 200 should return total count of all comments', () => {
+            return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then((response) => {
+                const body = response.body;
+                expect(body).toEqual(expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number), 
+                    body: expect.any(String),
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    article_img_url: expect.any(String),
+                    comment_count: expect.any(String)
+                }));
+            });
+        });
+    });
+})
