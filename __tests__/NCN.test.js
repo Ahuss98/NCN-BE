@@ -401,3 +401,34 @@ describe('DELETE', () => {
         });
     });
 });
+describe('GET', () => {
+    //task 10
+    describe('10-GET /api/users', () => {
+        test('GET: 200 should return all users as an array of users objects', () => {
+            return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then((response) => {
+                const body = response.body
+                if(body.length !== 0){
+                    body.forEach((userObj) => {
+                        expect(userObj).toEqual(expect.objectContaining({
+                            username: expect.any(String),
+                            name: expect.any(String),
+                            avatar_url: expect.any(String)
+                        }))
+                    })
+                }
+            })
+        });
+        test('Get: 404, responds with not found if route does not exist', () => {
+            return request(app)
+            .get('/api/not-a-route')
+            .expect(404)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('route does not exist');
+            })
+        });
+    });
+});

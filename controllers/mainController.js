@@ -1,4 +1,4 @@
-const {readTopics,readArticleId,readArticle,readComments,writeComment,updateArticle,removeComment} = require('../models/mainModel')
+const {readTopics,readArticleId,readArticle,readComments,writeComment,updateArticle,removeComment,readUsers} = require('../models/mainModel')
 
 
 exports.checkReq = function(req,res,next) {
@@ -108,6 +108,15 @@ exports.deleteCommentById = function(req,res,next) {
             return res.status(404).send({ msg: 'not found' });
         }
         res.sendStatus(204)
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.getUsers = function(req,res,next){
+    readUsers().then((results) => {
+        res.status(200).send(results)
     })
     .catch((err) => {
         next(err)
