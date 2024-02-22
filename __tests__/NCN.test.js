@@ -431,4 +431,36 @@ describe('GET', () => {
             })
         });
     });
+    //task11
+    describe('11-GET /api/articles?topic=:topic_name) ', () => {
+        test('Get: 200 shoudld accept a query and filter articles by topic specified', () => {
+            return request(app)
+            .get('/api/articles?topic=mitch')
+            .expect(200)
+            .then((response) => {
+                const body = response.body.articles
+                expect(body).not.toHaveLength(0)
+                    body.forEach((topicFiltered) => {
+                        expect(topicFiltered).toEqual(expect.objectContaining({
+                            title: expect.any(String),
+                            topic: 'mitch',
+                            author: expect.any(String),
+                            body: expect.any(String),
+                            created_at: expect.any(String), 
+                            article_img_url: expect.any(String),
+                            comment_count: expect.any(String) 
+                        }))
+                    })
+            })
+        }); 
+        test('GET 404 when an invalid query is requested', () => {
+            return request(app)
+            .get('/api/articles?topic=23-not-a-query')
+            .expect(404)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('not found')
+            })
+        });
+    });
 });

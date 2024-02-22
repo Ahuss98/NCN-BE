@@ -14,14 +14,25 @@ exports.readArticleId = function(id){
     })
 }
 
-exports.readArticle = function(){
-        return db.query(`SELECT articles.*, COUNT(comments.comment_id) AS       comment_count 
-                        FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id
-                        GROUP BY articles.article_id
-                        ORDER BY articles.created_at DESC;`).then(({rows}) => {
+exports.readArticle = function(topic){
+        let sqlString = `SELECT articles.*, COUNT(comments.comment_id) AS          
+                        comment_count 
+                        FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id`
+    const query = []
+    if(topic) {
+        sqlString += ` WHERE articles.topic = $1`
+        query.push(topic)
+    }
+    sqlString += ` GROUP BY articles.article_id
+                ORDER BY articles.created_at DESC;`
+    return db.query(sqlString,query).then(({rows}) => {
         return rows
     })
-}
+    .catch((err) => {
+        next(err)
+    })
+    }
+
 
 exports.readComments = function(id) {
     return db.query(`SELECT * FROM comments WHERE comments.article_id = $1

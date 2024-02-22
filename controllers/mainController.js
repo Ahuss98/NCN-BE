@@ -37,8 +37,13 @@ exports.getArticleId = function(req,res,next){
 }
 
 exports.getArticles = function(req,res,next){
-    readArticle().then((body) => {
-        res.status(200).send({articles: body})
+    const topic = req.query.topic;
+    readArticle(topic).then((body) => {
+        if(body.length === 0){
+            res.status(404).send({msg:'not found'})
+        } else {
+            res.status(200).send({articles: body})
+        }
     })
 }
 exports.getCommentsForArticleId = function(req,res,next){
