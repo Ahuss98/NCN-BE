@@ -421,5 +421,14 @@ describe('GET', () => {
                 }
             })
         });
+        test('Get: 404, responds with not found if route does not exist', () => {
+            return request(app)
+            .get('/api/not-a-route')
+            .expect(404)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('route does not exist');
+            })
+        });
     });
 });
