@@ -39,7 +39,6 @@ exports.getArticleId = function(req,res,next){
 exports.getArticles = function(req,res,next){
     const topic = req.query.topic;
     readArticle(topic).then((body) => {
-        console.log(body)
         if(body.length === 0){
             res.status(404).send({msg:'not found'})
         } else {
