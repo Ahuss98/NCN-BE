@@ -99,6 +99,20 @@
       "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
     }]
   }
+},
+"/api/articles?topic=:any_topic":{
+  "description": "filters all articles by requested topic",
+  "queries":["title","topic","author","body","created_at","article_img_url"],
+  "exampleResponse": {
+    "articles":[ {
+      "title": "A",
+      "topic": "mitch",
+      "author": "icellusedkars",
+      "body": "Delicious tin of cat food",
+      "created_at": 1602986400000,
+      "article_img_url":
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    }]
+  }
 }
-
 }
