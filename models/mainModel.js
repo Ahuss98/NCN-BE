@@ -31,8 +31,6 @@ exports.readComments = function(id) {
 };
 
 exports.writeComment = function(comment){
-// console.log(comment,'the comment')
-// console.log(comment.body)
     return db.query(`INSERT INTO comments
         (body, author, article_id)
         VALUES ($1, $2, $3)
@@ -63,5 +61,11 @@ exports.removeComment = function(id){
     })
     .catch((err) => {
         throw(err)
+    })
+}
+
+exports.readUsers = function(){
+    return db.query(`SELECT * FROM users;`).then(({rows}) => {
+        return rows
     })
 }
