@@ -1,19 +1,24 @@
 const express = require("express");
 const app = express();
-const {getTopics,checkReq,getApi,getArticleId,getArticles,getCommentsForArticleId,postCommentForArticleId,patchArticleById,deleteCommentById,getUsers} = require('./controllers/mainController')
-const {handleCustomErrors,handlePsqlErrors} = require('./error.controller')
+
+const topicsRouter = require('./routers/topicsRouter')
+const articlesRouter = require('./routers/articlesRouter')
+const commentsRouter = require("./routers/commentsRouter");
+const usersRouter = require("./routers/usersRouter");
+
+const {checkReq,getApi} = require('./controllers/mainController')
+const {handleCustomErrors,handlePsqlErrors} = require('./error.controller');
+
 app.use(express.json());
 
 app.get('/api',getApi)
 app.get('/api/:dataSet',checkReq)
-app.get('/api/topics',getTopics)
-app.get('/api/articles/:articles_id',getArticleId)
-app.get('/api/articles',getArticles)
-app.get('/api/articles/:article_id/comments',getCommentsForArticleId)
-app.post('/api/articles/:article_id/comments',postCommentForArticleId)
-app.patch('/api/articles/:article_id',patchArticleById)
-app.delete('/api/comments/:comment_id',deleteCommentById)
-app.get('/api/users',getUsers)
+
+app.use('/api/topics', topicsRouter)
+app.use('/api/articles', articlesRouter)
+app.use('/api/comments',commentsRouter)
+app.use('/api/users',usersRouter)
+
 
 
 app.use(handleCustomErrors);
