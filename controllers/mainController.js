@@ -37,15 +37,29 @@ exports.getArticleId = function(req,res,next){
 }
 
 exports.getArticles = function(req,res,next){
-    const topic = req.query.topic;
-    readArticle(topic).then((body) => {
+    const queryObj = req.query
+    const availbleData = ['topic','article','comment','user','sort_by']
+    if(Object.keys(queryObj).length !== 0){
+        if (!availbleData.includes(Object.keys(queryObj)[0])){
+            console.log('it didnt work')
+            return res.status(404).send({msg:'route does not exist'})
+        }
+    }
+
+    readArticle(queryObj).then((body) => {
         if(body.length === 0){
             res.status(404).send({msg:'not found'})
         } else {
             res.status(200).send({articles: body})
         }
     })
+    .catch((err) => {
+        console.log(err)
+        next(err)
+    })
 }
+
+
 exports.getCommentsForArticleId = function(req,res,next){
     const id = req.params.article_id
     readComments(id).then((body) => {
