@@ -546,6 +546,35 @@ describe('GET', () => {
                 expect(body).not.toHaveLength(0)
                     expect(body).toBeSortedBy('votes',{ descending : true})
             })
+        });
+    })
+    describe('GET /api/users/:username', () => {
+        test('GET: 200 should respond with a user object with expected properties ', () => {
+            return request(app)
+            .get('/api/users/butter_bridge')
+            .expect(200)
+            .then((response) => {
+                const body = response.body
+                console.log(response)
+                console.log(body)
+                body.forEach((userObj)=>{
+                    expect(userObj).toEqual(expect.objectContaining({
+                        username: 'butter_bridge',
+                        avatar_url: expect.any(String),
+                        name: expect.any(String)
+                    }))
+                })
+            })
+        });
+        test('GET: 404  username dosnt exist ', () => {
+            return request(app)
+            .get('/api/users/mrButter')
+            .expect(404)
+            .then((response) => {
+                const body = response.body
+                console.log(body)
+                expect(body.msg).toBe('username dosnt exist')
+            })
+        });
     });
-})
 })
