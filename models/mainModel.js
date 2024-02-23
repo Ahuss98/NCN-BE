@@ -20,8 +20,7 @@ exports.readArticleId = function(id){
 exports.readArticle = function(queryObj) {
     let sqlString = `SELECT articles.*, COUNT(comments.comment_id) AS comment_count 
                     FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id`;
-                    
-    console.log(queryObj)
+
     const query = [];
     let orderBy = 'DESC'
     if(Object.keys(queryObj).includes('order')){
@@ -38,7 +37,6 @@ exports.readArticle = function(queryObj) {
         if (queryObj.sort_by) {
             const validColumns = ['article_id', 'created_at', 'votes'];
             if (!validColumns.includes(queryObj.sort_by)) {
-                console.log('not a valid column')
                 return Promise.reject({status:400, msg:'Invalid column'})
             }
             sqlString += ` GROUP BY articles.article_id
@@ -105,3 +103,13 @@ exports.readUsers = function(){
         return rows
     })
 }
+
+exports.readUserByUsername = function(username) {
+    return db.query(`SELECT * FROM users WHERE username = $1;`, [username])
+        .then(({ rows }) => {
+            return rows;
+        })
+        .catch((err) => {
+            throw err;
+        });
+};

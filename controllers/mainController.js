@@ -1,4 +1,4 @@
-const {readTopics,readArticleId,readArticle,readComments,writeComment,updateArticle,removeComment,readUsers} = require('../models/mainModel')
+const {readTopics,readArticleId,readArticle,readComments,writeComment,updateArticle,removeComment,readUsers,readUserByUsername} = require('../models/mainModel')
 
 
 exports.checkReq = function(req,res,next) {
@@ -54,7 +54,6 @@ exports.getArticles = function(req,res,next){
         }
     })
     .catch((err) => {
-        console.log(err)
         next(err)
     })
 }
@@ -135,6 +134,21 @@ exports.deleteCommentById = function(req,res,next) {
 
 exports.getUsers = function(req,res,next){
     readUsers().then((results) => {
+        res.status(200).send(results)
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+exports.getUserByUsername = function(req,res,next){
+    console.log(req.params.username)
+    const username = req.params.username
+    readUserByUsername(username).then((results) => {
+        console.log(results)
+        if(results.length === 0){
+            return res.status(404).send({msg: 'username dosnt exist'})
+        }
         res.status(200).send(results)
     })
     .catch((err) => {
