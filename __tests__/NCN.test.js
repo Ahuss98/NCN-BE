@@ -486,4 +486,66 @@ describe('GET', () => {
             });
         });
     });
+    //task15
+    describe('15-GET /api/articles (sorting queries)', () => {
+        test('GET: 200 should respond with articles sorted if no query (baisically tasks/tests for task 5)', () => {
+            return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then((response) => {
+                const body = response.body.articles
+                expect(body).not.toHaveLength(0)
+                    expect(body).toBeSortedBy('created_at',{descending : true})
+            })
+        });
+        test('GET: 200 should sort by created at if not specified', () => {
+            return request(app)
+            .get('/api/articles?sort_by')
+            .expect(200)
+            .then((response) => {
+                const body = response.body.articles
+                expect(body).not.toHaveLength(0)
+                    expect(body).toBeSortedBy('created_at',{descending : true})
+            })
+        });
+        test('GET: 200 should sort by requested queries', () => {
+            return request(app)
+            .get('/api/articles?sort_by=votes')
+            .expect(200)
+            .then((response) => {
+                const body = response.body.articles
+                expect(body).not.toHaveLength(0)
+                    expect(body).toBeSortedBy('votes',{descending : true})
+            })
+        });
+        test('GET: 400 invalid column ', () => {
+            return request(app)
+            .get('/api/articles?sort_by=123hi')
+            .expect(400)
+            .then((response) => {
+                const body = response.body
+                expect(body.msg).toBe('Invalid column')
+            })
+        });
+        test('GET: 200 should change order if requested',() => {
+            return request(app)
+            .get('/api/articles?sort_by=votes&order=ASC')
+            .expect(200)
+            .then((response) => {
+                const body = response.body.articles
+                expect(body).not.toHaveLength(0)
+                    expect(body).toBeSortedBy('votes',{ ascending : true})
+            })
+        })
+        test('GET: 200 if order isnt valid will defualt to desc',() => {
+            return request(app)
+            .get('/api/articles?sort_by=votes&order=123wer')
+            .expect(200)
+            .then((response) => {
+                const body = response.body.articles
+                expect(body).not.toHaveLength(0)
+                    expect(body).toBeSortedBy('votes',{ descending : true})
+            })
+    });
+})
 })
