@@ -15,8 +15,7 @@ afterAll(() => db.end());
 
 
 
-//task1
-describe('1-testing index.js', () => {
+describe('testing index.js', () => {
     describe('requred keys from index should have objects with correct data', () => {
         test('artical data ', () => {
             articleData.forEach((currObject,index) => {expect(typeof currObject).toBe('object')
@@ -38,8 +37,7 @@ describe('1-testing index.js', () => {
 })
 
 describe('GET', () => {
-//task2
-describe('2-GET /api/topics',() => {
+describe('GET /api/topics',() => {
     test('GET:200 availble on endpoint /api/topics', () => {
         return request(app)
         .get('/api/topics')
@@ -64,8 +62,7 @@ describe('2-GET /api/topics',() => {
     });
 })
 
-//task3
-describe('3-GET /API', () => {
+describe('GET /API', () => {
     test('GET: 200 should return a object of all endpoints', () => {
         return request(app)
         .get('/api')
@@ -78,8 +75,7 @@ describe('3-GET /API', () => {
     });
 })
 
-//task4
-describe('4-GET api/article/:articleid', () => {
+describe('GET api/article/:articleid', () => {
     test('GET: 200 should resturn an object', () => {
         return request(app)
         .get('/api/articles/1')
@@ -125,8 +121,7 @@ describe('4-GET api/article/:articleid', () => {
     });
 });
 
-//task 5
-describe('5-GET /api/articles', () => {
+describe('GET /api/articles', () => {
     test('GET: 200 should respond with an array of all article objects with expected properties', () => {
         return request(app)
         .get('/api/articles')
@@ -168,8 +163,7 @@ describe('5-GET /api/articles', () => {
     });
 });
 
-//task 6
-describe('6-GET /api/articles/:article_id/comments', () => {
+describe('GET /api/articles/:article_id/comments', () => {
     test('GET: 200 should respond with an array of comments for given article id with expected properties', () => {
         return request(app)
         .get('/api/articles/1/comments')
@@ -222,8 +216,7 @@ describe('6-GET /api/articles/:article_id/comments', () => {
 });
 })
 describe('POST', () => {
-    //task7
-    describe('7-POST /api/articles/:article_id/comments', () => {
+    describe('POST /api/articles/:article_id/comments', () => {
         test('POST: 201 should add a comment for an article, and respond with comment with expected properties', () => {
             const postObj = {username:'butter_bridge', body:'i like the story backwords'}
             return request(app)
@@ -306,8 +299,7 @@ describe('POST', () => {
 });
 
 describe('PATCH', () => {
-    //task8
-    describe('8-PATCH /api/articles/:article_id', () => {
+    describe('PATCH /api/articles/:article_id', () => {
         test('PATCH: 200 update an article by ID and responds with updated article', () => {
             const postObj = {inc_votes: 20}
             return request(app)
@@ -377,7 +369,6 @@ describe('PATCH', () => {
 })
 })
 describe('DELETE', () => {
-    //task9
     describe('DELETE /api/comments/:comment_id', () => {
         test('DELETE: 204 succesfully deletes comment by id', () => {
             return request(app)
@@ -403,8 +394,7 @@ describe('DELETE', () => {
     });
 });
 describe('GET', () => {
-    //task 10
-    describe('10-GET /api/users', () => {
+    describe('GET /api/users', () => {
         test('GET: 200 should return all users as an array of users objects', () => {
             return request(app)
             .get('/api/users')
@@ -432,8 +422,7 @@ describe('GET', () => {
             })
         });
     });
-    //task11
-    describe('11-GET /api/articles?topic=:topic_name) ', () => {
+    describe('GET /api/articles?topic=:topic_name) ', () => {
         test('Get: 200 shoudld accept a query and filter articles by topic specified', () => {
             return request(app)
             .get('/api/articles?topic=mitch')
@@ -464,8 +453,7 @@ describe('GET', () => {
             })
         });
     });
-    //task12
-    describe('12-GET /api/articles/:article_id (comment_count)', () => {
+    describe('GET /api/articles/:article_id (comment_count)', () => {
         test('GET: 200 should return total count of all comments', () => {
             return request(app)
             .get('/api/articles/1')
@@ -486,8 +474,7 @@ describe('GET', () => {
             });
         });
     });
-    //task15
-    describe('15-GET /api/articles (sorting queries)', () => {
+    describe('GET /api/articles (sorting queries)', () => {
         test('GET: 200 should respond with articles sorted if no query (baisically tasks/tests for task 5)', () => {
             return request(app)
             .get('/api/articles')
