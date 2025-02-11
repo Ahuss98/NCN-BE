@@ -1,20 +1,29 @@
-# Northcoders News API
+# **Northcoders News API** 📰
 
-**Link to Hosted Version:**  
-[https://ncn-network.onrender.com](https://ncn-network.onrender.com)
+[![Node.js](https://img.shields.io/badge/Node.js-20.10.0-green.svg)](https://nodejs.org/)  
+**Live Hosted Version:** 🌍  
+🔗 **[ncn-network.onrender.com](https://ncn-network.onrender.com)**  
 
-**Summary:**  
-This project is a live database created from scratch using Node.js and PostgreSQL. It houses articles, topics, comments, and users, all within this codebase that can be queried, posted to, patched, or deleted as needed.
+---
 
-## Instructions
+## **📌 About the Project**
+This is a **fully functional RESTful API** built using **Node.js** and **PostgreSQL**, designed to manage a live database of:
+- 📰 **Articles**  
+- 🎭 **Topics**  
+- 💬 **Comments**  
+- 👤 **Users**  
 
-### Clone Repository
+All database operations—**GET, POST, PATCH, DELETE**—are supported for efficient data management.
+
+---
+
+## **🛠 Setup Instructions**
+### **📌 1. Clone the Repository**
 1. Fork this repository.
-2. Copy the link of your forked repo.
+2. Copy the **forked repo** link.
 3. In your terminal, run:
-```bash
-git clone <the link of the forked repo>
-```
+   ```bash
+   git clone <your-forked-repo-link>
 
 ### Install Dependencies
 ```bash
@@ -41,16 +50,20 @@ Run tests:
 ```bash
 npm t NCN.test.js
 ```
-## Environment Variables
-If you need access to the necessary environment variables to connect to the databases locally for development purposes, follow these steps:
 
-1. Create a file in the root directory called .env.developer.
-2. Set the following environment variable in .env.developer:
+## 🌍 Environment Variables
+
+To set up environment variables for **local database connection**, follow these steps:
+
+### **1️⃣ Create `.env.developer`**
+In the **root directory**, create a file named **`.env.developer`**, then add the following line:
+
+### **2️⃣ Set the following environment variable in .env.developer**
     - PGDATABASE=(your-database-name-here)
     - You can find the database name in setup.sql.
     - Use the non-test database for the developer environment variable.
-3. Create another file in the root directory called .env.test.
-4. Set the following environment variable in .env.test:
+### **3️⃣ Create another file in the root directory called .env.test**
+### **4️⃣ Set the following environment variable in .env.test**
     - PGDATABASE=(your-test-database-name-here)
     - You can find the test database name in setup.sql.
     - Use the test database for the test environment variable.
